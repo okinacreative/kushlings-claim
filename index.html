@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2299.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Kushlings Claim&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-family: system-ui, sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: radial-gradient(circle at top, #fff 0%, #d8d8d8 150%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#card {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 8px 24px rgba(0,0,0,0.1);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>button {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 9999px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 14px 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(90deg,#2ba84a,#33c26b);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>input {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin: 8px 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #ccc;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h2&gt;Claim Your Free Kushling&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="address"&gt;Not connected&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="connect"&gt;Connect Wallet&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Claimable (from snapshot)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input id="claimable" readonly value="0" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Quantity to claim&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input id="qty" value="1" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button id="claim"&gt;Claim&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="msg" style="margin-top:12px;color:#444;"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const CLAIMS_URL = "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_0136e423c6d940eeaae0d6b74fcb47ab.json";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const PROOFS_URL = "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_1808839a4f844d90b9de50804129c0c3.json";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const CONTRACT_ADDRESS = "0xf8E567D269B9C9be82520A6c8Cf76f364aa2735d";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const ABI = [{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>"inputs":[</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{"internalType":"uint256","name":"qty","type":"uint256"},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{"internalType":"uint256","name":"maxFor","type":"uint256"},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>],</p>
+<p class="p1"><span class="Apple-converted-space">      </span>"name":"claim",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>"outputs":[],</p>
+<p class="p1"><span class="Apple-converted-space">      </span>"stateMutability":"nonpayable",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>"type":"function"</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>let claims = {}, proofs = {}, signer, address;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const connectBtn = document.getElementById('connect');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const claimBtn = document.getElementById('claim');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const msg = document.getElementById('msg');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const addrDiv = document.getElementById('address');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const claimable = document.getElementById('claimable');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const qtyInput = document.getElementById('qty');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function show(m, c="black"){ msg.style.color=c; msg.textContent=m; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function loadData(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>claims = await (await fetch(CLAIMS_URL)).json();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>proofs = (await (await fetch(PROOFS_URL)).json()).proofs || {};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function connect(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(!window.ethereum) return show("No wallet detected","red");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const provider = new ethers.BrowserProvider(window.ethereum);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>signer = await provider.getSigner();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>address = (await signer.getAddress()).toLowerCase();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>addrDiv.textContent = address;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const allowed = claims[address] || 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>claimable.value = allowed;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>show(allowed&gt;0?"Wallet is eligible ✅":"Not eligible ❌", allowed&gt;0?"green":"red");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>async function claim(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(!signer) return connect();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const allowed = claims[address] || 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const qty = Number(qtyInput.value);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(qty &lt; 1 || qty &gt; allowed) return show("Invalid quantity","red");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const proof = proofs[address] || [];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const c = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>show("Sending transaction...","blue");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tx = await c.claim(qty, allowed, proof);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>await tx.wait();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>show("✅ Claimed successfully!","green");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} catch(e){ show("❌ "+(e.reason||e.message),"red"); }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>connectBtn.onclick = connect;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>claimBtn.onclick = claim;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>loadData();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
