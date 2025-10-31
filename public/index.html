@@ -2,17 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Kushlings Claim</title>
+  <title>Kushlings Claim – diag</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     :root {
       --card: #ffffff;
       --bg: radial-gradient(circle at top, #ffffff 0%, #e8e8e8 150%);
-      --green: #26a852;
-      --green2: #3ccf74;
-      --purple: #8a77df;
-      --cyan: #7ad8ed;
     }
     * { box-sizing: border-box; }
     body {
@@ -24,47 +20,53 @@
       background: var(--bg);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+    #wrap { width: min(720px, 96vw); }
+    #status {
+      background: #111;
+      color: #0ff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 14px;
+      max-height: 200px;
+      overflow: auto;
+    }
     #kush-card {
       background: #fff;
       border-radius: 28px;
-      width: min(620px, 92vw);
+      width: 100%;
       box-shadow: 0 18px 40px rgba(0,0,0,0.08);
       padding: 28px;
     }
     #kush-header {
       display: flex;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 26px;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
-    #kush-connect-btn {
+    button.main {
       flex: 1;
-      background: linear-gradient(90deg, #26a852 0%, #30b662 100%);
+      height: 54px;
+      border-radius: 9999px;
+      border: 0;
+      background: linear-gradient(90deg, #2ba84a 0%, #33c26b 100%);
       color: #fff;
-      border: 3px solid #165cc9;
-      border-radius: 9999px;
-      height: 64px;
-      font-size: 20px;
       font-weight: 700;
+      font-size: 16px;
       cursor: pointer;
-      transition: .2s;
     }
-    #kush-wallet-btn {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #f495d1 0%, #8a77df 100%);
-      border: none;
+    button.secondary {
+      height: 54px;
       border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 1px solid #ccc;
+      background: #fff;
       cursor: pointer;
+      padding: 0 18px;
     }
-    #kush-wallet-btn svg {
-      width: 30px; height: 30px; stroke: #fff; fill: none; stroke-width: 1.7;
-    }
-    .kush-label { font-weight: 600; margin-bottom: 6px; }
-    .kush-input {
+    .label { font-weight: 600; margin-bottom: 6px; }
+    .input {
       width: 100%;
       background: #f3f4f6;
       border: none;
@@ -74,7 +76,7 @@
       outline: none;
       margin-bottom: 18px;
     }
-    #kush-claim-btn {
+    #claimBtn {
       width: 100%;
       background: linear-gradient(90deg, #8a77df 0%, #7ad8ed 94%);
       border: 3px solid rgba(71,93,191,0.3);
@@ -82,62 +84,51 @@
       height: 62px;
       color: #fff;
       font-weight: 700;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
       margin-top: 6px;
-      transition: .2s;
     }
-    #kush-claim-btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
-    }
-    #kush-message {
-      margin-top: 16px;
-      display: none;
-      font-size: 14px;
-    }
-    #kush-message.error { color: #c0392b; }
-    #kush-message.success { color: #0f766e; }
+    #claimBtn:disabled { opacity: .6; cursor: not-allowed; }
+    #msg { margin-top: 14px; display: none; }
+    #msg.error { color: #c0392b; }
+    #msg.success { color: #0f766e; }
   </style>
 
-  <!-- ✅ ethers v5 UMD, NOT the ESM one -->
+  <!-- ✅ ethers v5 UMD (browser safe) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
           integrity="sha512-fTfx3g3k7Pf6YY8HuWePXycMK3c35lusz791SL53nEoaB7PPdCrJXVxPFn1u3VQLN+aszJQPplddQzoK5ri1Cw=="
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-  <div id="kush-card">
-    <div id="kush-header">
-      <button id="kush-connect-btn">Connect Wallet</button>
-      <button id="kush-wallet-btn" aria-label="Wallet menu">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 7h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
-          <path d="M18 12h2"/>
-          <path d="M8 7V5a2 2 0 0 1 2-2h6"/>
-        </svg>
-      </button>
+  <div id="wrap">
+    <div id="status">loading…</div>
+
+    <div id="kush-card">
+      <div id="kush-header">
+        <button id="connectBtn" class="main">Connect Wallet (ethers)</button>
+        <button id="rawBtn" class="secondary">Raw MetaMask connect</button>
+      </div>
+
+      <div class="label">Connected:</div>
+      <div id="address" style="margin-bottom:14px;">Not connected</div>
+
+      <div class="label">Claimable (from snapshot)</div>
+      <input id="claimable" class="input" value="0" readonly />
+
+      <div class="label">Quantity to claim now</div>
+      <input id="qty" class="input" value="1" />
+
+      <button id="claimBtn">Claim Kushlings</button>
+      <div id="msg"></div>
     </div>
-
-    <div class="kush-label">Connected:</div>
-    <div id="kush-address" style="margin-bottom:14px;">Not connected</div>
-
-    <div class="kush-label">Claimable (from snapshot)</div>
-    <input id="kush-claimable" class="kush-input" value="0" readonly />
-
-    <div class="kush-label">Quantity to claim now</div>
-    <input id="kush-qty" class="kush-input" value="1" />
-
-    <button id="kush-claim-btn">Claim Kushlings</button>
-    <div id="kush-message"></div>
   </div>
 
   <script>
-    // ---- config ----
+    // --- CONFIG ---
     const CLAIMS_URL =
       "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_0136e423c6d940eeaae0d6b74fcb47ab.json";
     const PROOFS_URL =
       "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_1808839a4f844d90b9de50804129c0c3.json";
-
     const CONTRACT_ADDRESS = "0xf8E567D269B9C9be82520A6c8Cf76f364aa2735d";
     const CONTRACT_ABI = [
       {
@@ -153,29 +144,34 @@
       }
     ];
 
+    // --- STATE ---
     let claims = {};
     let proofs = {};
     let merkleRoot = null;
-    let userAddress = null;
     let signer = null;
+    let userAddress = null;
 
-    const connectBtn  = document.getElementById("kush-connect-btn");
-    const addrDiv     = document.getElementById("kush-address");
-    const claimableIn = document.getElementById("kush-claimable");
-    const qtyIn       = document.getElementById("kush-qty");
-    const claimBtn    = document.getElementById("kush-claim-btn");
-    const msg         = document.getElementById("kush-message");
+    // --- DOM ---
+    const statusBox = document.getElementById("status");
+    const connectBtn = document.getElementById("connectBtn");
+    const rawBtn = document.getElementById("rawBtn");
+    const addrDiv = document.getElementById("address");
+    const claimableIn = document.getElementById("claimable");
+    const qtyIn = document.getElementById("qty");
+    const claimBtn = document.getElementById("claimBtn");
+    const msg = document.getElementById("msg");
 
+    function setStatus(obj) {
+      statusBox.textContent = JSON.stringify(obj, null, 2);
+    }
     function showMessage(text, kind = "error") {
       msg.textContent = text;
-      msg.className = kind === "success" ? "success" : "error";
       msg.style.display = "block";
+      msg.className = kind;
     }
-
     function normalizeAddr(a) {
       return (a || "").toLowerCase();
     }
-
     function getAllowedFor(addr) {
       const entry = claims[addr];
       if (!entry) return 0;
@@ -185,47 +181,81 @@
         if (typeof entry.max === "number") return entry.max;
         if (typeof entry.claimable === "number") return entry.claimable;
         if (typeof entry.amount === "number") return entry.amount;
-        const firstNum = Object.values(entry).find(v => typeof v === "number");
-        if (firstNum) return firstNum;
+        const n = Object.values(entry).find(v => typeof v === "number");
+        if (n) return n;
       }
       return 0;
     }
 
+    // --- LOAD SNAPSHOTS ---
     async function loadLists() {
       try {
-        const [cRes, pRes] = await Promise.all([fetch(CLAIMS_URL), fetch(PROOFS_URL)]);
+        const [cRes, pRes] = await Promise.all([
+          fetch(CLAIMS_URL),
+          fetch(PROOFS_URL)
+        ]);
         claims = await cRes.json();
         const pJson = await pRes.json().catch(() => ({}));
         proofs = pJson.proofs || {};
         merkleRoot = pJson.root || null;
-        console.log("claims loaded:", Object.keys(claims).length);
+        setStatus({
+          stage: "loaded snapshots",
+          claimEntries: Object.keys(claims).length,
+          hasProofRoot: !!merkleRoot,
+          hasEthereum: !!window.ethereum
+        });
       } catch (err) {
         console.error(err);
+        setStatus({ error: "could not load claim data", detail: String(err) });
         showMessage("Could not load claim data.");
       }
     }
 
-    async function connectWallet() {
+    // --- RAW CONNECT (bypasses ethers) ---
+    async function rawConnect() {
+      if (!window.ethereum) {
+        setStatus({ hasEthereum: false, note: "No wallet in this browser" });
+        showMessage("No wallet found.");
+        return;
+      }
       try {
-        if (!window.ethereum) {
-          showMessage("No wallet found. Install MetaMask.");
-          return;
-        }
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        setStatus({ hasEthereum: true, accounts });
+        addrDiv.textContent = accounts[0];
+        showMessage("Connected (raw).", "success");
+      } catch (e) {
+        console.error(e);
+        setStatus({ hasEthereum: true, rawConnectError: e.message || e });
+        showMessage("Raw connect failed.");
+      }
+    }
 
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts"
-        });
-        const account = accounts[0];
-        userAddress = normalizeAddr(account);
-
+    // --- ETHERS CONNECT ---
+    async function connectWallet() {
+      if (!window.ethereum) {
+        setStatus({ hasEthereum: false, note: "No window.ethereum" });
+        showMessage("No wallet found. Install MetaMask.");
+        return;
+      }
+      try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
-
+        const addr = await signer.getAddress();
+        userAddress = normalizeAddr(addr);
         addrDiv.textContent = userAddress;
         connectBtn.textContent = "Connected ✅";
 
         const allowed = getAllowedFor(userAddress);
         claimableIn.value = String(allowed);
+
+        setStatus({
+          hasEthereum: true,
+          address: userAddress,
+          allowed,
+          network: await provider.getNetwork().then(n => n.name).catch(() => "unknown")
+        });
+
         if (allowed > 0) {
           showMessage("Wallet is on the claim list.", "success");
         } else {
@@ -233,10 +263,12 @@
         }
       } catch (err) {
         console.error(err);
+        setStatus({ hasEthereum: true, connectError: err.message || err });
         showMessage("Wallet connection failed.");
       }
     }
 
+    // --- CLAIM ---
     async function doClaim() {
       if (!signer || !userAddress) {
         return connectWallet();
@@ -272,8 +304,15 @@
     }
 
     connectBtn.addEventListener("click", connectWallet);
+    rawBtn.addEventListener("click", rawConnect);
     claimBtn.addEventListener("click", doClaim);
 
+    // start
+    setStatus({
+      initial: true,
+      hasEthereum: !!window.ethereum,
+      userAgent: navigator.userAgent
+    });
     loadLists();
   </script>
 </body>
