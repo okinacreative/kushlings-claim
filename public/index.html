@@ -7,7 +7,13 @@
 
   <style>
     :root {
-      --card-w: min(640px, 94vw);
+      --card: #ffffff;
+      --bg: radial-gradient(circle at top, #ffffff 0%, #e8e8e8 150%);
+      --green: #26a852;
+      --green2: #3ccf74;
+      --purple: #8a77df;
+      --cyan: #7ad8ed;
+      --grey-input: #f1f2f5;
     }
     * { box-sizing: border-box; }
     body {
@@ -16,38 +22,39 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at top, #ffffff 0%, #dcdfe3 120%);
+      background: var(--bg);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     #kush-card {
-      background: #fff;
-      border-radius: 32px;
-      box-shadow: 0 24px 50px rgba(0,0,0,.08);
-      width: var(--card-w);
+      background: var(--card);
+      border-radius: 28px;
+      width: min(620px, 92vw);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.08);
       padding: 28px;
     }
     #kush-header {
       display: flex;
-      gap: 14px;
-      margin-bottom: 24px;
+      gap: 16px;
       align-items: center;
+      margin-bottom: 26px;
     }
     #kush-connect-btn {
       flex: 1;
-      height: 68px;
-      border-radius: 9999px;
-      background: linear-gradient(95deg, #27ae60 0%, #45d07d 90%);
-      border: 3px solid rgba(19,80,182,.6);
+      background: linear-gradient(90deg, #26a852 0%, #30b662 100%);
       color: #fff;
-      font-weight: 700;
+      border: 3px solid #165cc9;
+      border-radius: 9999px;
+      height: 64px;
       font-size: 20px;
+      font-weight: 700;
       cursor: pointer;
+      transition: .2s;
     }
     #kush-wallet-btn {
-      width: 68px;
-      height: 68px;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #f495d1 0%, #8a77df 100%);
       border: none;
-      background: linear-gradient(140deg, #f495d1 0%, #8a77df 100%);
       border-radius: 9999px;
       display: flex;
       align-items: center;
@@ -55,39 +62,38 @@
       cursor: pointer;
     }
     #kush-wallet-btn svg {
-      width: 32px; height: 32px; stroke: #fff; stroke-width: 1.5; fill: none;
+      width: 30px; height: 30px; stroke: #fff; fill: none; stroke-width: 1.7;
     }
-    .kush-label {
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
+    .kush-label { font-weight: 600; margin-bottom: 6px; }
     .kush-input {
       width: 100%;
       background: #f3f4f6;
       border: none;
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 14px;
       font-size: 16px;
       outline: none;
       margin-bottom: 18px;
     }
     #kush-claim-btn {
       width: 100%;
-      height: 66px;
+      background: linear-gradient(90deg, #8a77df 0%, #7ad8ed 94%);
+      border: 3px solid rgba(71,93,191,0.3);
       border-radius: 9999px;
-      border: 3px solid rgba(71,93,191,0.25);
-      background: linear-gradient(95deg, #6a7ddd 0%, #70d6ec 96%);
+      height: 62px;
       color: #fff;
-      font-size: 20px;
       font-weight: 700;
+      font-size: 20px;
       cursor: pointer;
+      margin-top: 6px;
+      transition: .2s;
     }
     #kush-claim-btn:disabled {
       opacity: .6;
       cursor: not-allowed;
     }
     #kush-message {
-      margin-top: 14px;
+      margin-top: 16px;
       display: none;
       font-size: 14px;
     }
@@ -95,19 +101,22 @@
     #kush-message.success { color: #0f766e; }
 
     @media (max-width: 540px) {
-      #kush-card { border-radius: 0; min-height: 100vh; justify-content: center; }
-      body { background: #e9e9e9; }
+      #kush-header { flex-direction: row; }
+      #kush-card { padding: 20px; }
+      #kush-connect-btn { font-size: 18px; }
     }
   </style>
 
-  <!-- BROWSER BUILD (works in Vercel static page) -->
-  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+  <!-- 👇 use the UMD/legacy build of ethers (works with <script>) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
+          integrity="sha512-fTfx3g3k7Pf6YY8HuWePXycMK3c35lusz791SL53nEoaB7PPdCrJXVxPFn1u3VQLN+aszJQPplddQzoK5ri1Cw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <div id="kush-card">
     <div id="kush-header">
       <button id="kush-connect-btn">Connect Wallet</button>
-      <button id="kush-wallet-btn" aria-label="wallet">
+      <button id="kush-wallet-btn" aria-label="Wallet menu">
         <svg viewBox="0 0 24 24">
           <path d="M4 7h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
           <path d="M18 12h2"/>
@@ -130,7 +139,7 @@
   </div>
 
   <script>
-    // ----------- CONFIG -----------
+    // ====== CONFIG ======
     const CLAIMS_URL =
       "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_0136e423c6d940eeaae0d6b74fcb47ab.json";
     const PROOFS_URL =
@@ -151,15 +160,14 @@
       }
     ];
 
-    // ----------- STATE -----------
+    // ====== STATE ======
     let claims = {};
     let proofs = {};
     let merkleRoot = null;
     let userAddress = null;
-    let provider = null;
     let signer = null;
 
-    // ----------- DOM -----------
+    // ====== DOM ======
     const connectBtn  = document.getElementById("kush-connect-btn");
     const addrDiv     = document.getElementById("kush-address");
     const claimableIn = document.getElementById("kush-claimable");
@@ -169,8 +177,8 @@
 
     function showMessage(text, kind = "error") {
       msg.textContent = text;
-      msg.style.display = "block";
       msg.className = kind === "success" ? "success" : "error";
+      msg.style.display = "block";
     }
 
     function normalizeAddr(a) {
@@ -192,6 +200,7 @@
       return 0;
     }
 
+    // ====== LOAD SNAPSHOTS ======
     async function loadLists() {
       try {
         const [cRes, pRes] = await Promise.all([
@@ -209,20 +218,24 @@
       }
     }
 
-    // ----------- WALLET -----------
+    // ====== WALLET CONNECT (ethers v5 UMD) ======
     async function connectWallet() {
       try {
-        if (!window.ethereum) {
+        if (typeof window.ethereum === "undefined") {
           showMessage("No wallet found. Install MetaMask.");
           return;
         }
 
-        // ethers v5 way
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
+        // request accounts
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts"
+        });
+        const account = accounts[0];
+        userAddress = normalizeAddr(account);
+
+        // create provider/signer using global ethers (v5)
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         signer = provider.getSigner();
-        const addr = await signer.getAddress();
-        userAddress = normalizeAddr(addr);
 
         addrDiv.textContent = userAddress;
         connectBtn.textContent = "Connected ✅";
@@ -240,7 +253,7 @@
       }
     }
 
-    // ----------- CLAIM -----------
+    // ====== CLAIM ======
     async function doClaim() {
       if (!signer || !userAddress) {
         return connectWallet();
@@ -257,19 +270,11 @@
       }
 
       const proof = (proofs[userAddress] || []).map(p => p);
-      if (!proof.length) {
-        return showMessage("No Merkle proof for this wallet. (Check proofs.json)");
-      }
-      if (!merkleRoot) {
-        return showMessage("No Merkle root loaded.");
-      }
+      if (!proof.length) return showMessage("No Merkle proof for this wallet. (Check proofs.json)");
+      if (!merkleRoot) return showMessage("No Merkle root loaded.");
 
       try {
-        const contract = new ethers.Contract(
-          CONTRACT_ADDRESS,
-          CONTRACT_ABI,
-          signer
-        );
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
         claimBtn.disabled = true;
         showMessage("Sending transaction...", "success");
         const tx = await contract.claim(qty, allowed, proof);
@@ -286,7 +291,6 @@
     connectBtn.addEventListener("click", connectWallet);
     claimBtn.addEventListener("click", doClaim);
 
-    // start
     loadLists();
   </script>
 </body>
