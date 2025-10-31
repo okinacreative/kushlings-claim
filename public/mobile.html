@@ -196,7 +196,7 @@
 <body>
   <div id="wrap">
     <div id="kush-card">
-      <div id="mobileBanner">📱 Mobile Wallet Version</div>
+      <div id="mobileBanner">Kushlings Mobile Claim</div>
       <div id="kush-header">
         <button id="connectBtn" class="main">Connect Wallet</button>
         <button id="disconnectBtn" style="display:none;" title="Disconnect Wallet">
@@ -208,14 +208,6 @@
 
       <div class="label">Connected:</div>
       <div id="address" style="margin-bottom:14px;">Not connected</div>
-      
-      <div id="walletStatus" style="font-size:14px; font-weight:600; margin-bottom:14px; padding:10px; background:#f3f4f6; border-radius:8px;">
-        <span id="walletDetected"></span>
-      </div>
-      
-      <button id="debugBtn" style="width:100%; background:#666; border:none; border-radius:8px; height:36px; color:#fff; font-size:12px; cursor:pointer; margin-bottom:14px;">
-        🔍 Debug: Show Wallet Info
-      </button>
 
       <div class="label">Claimable (from snapshot)</div>
       <input id="claimable" class="input" value="0" readonly />
@@ -359,21 +351,6 @@
           if (n) return n;
         }
         return 0;
-      }
-
-      function updateWalletStatus() {
-        const statusDiv = document.getElementById("walletStatus");
-        const detectedSpan = document.getElementById("walletDetected");
-        const hasEthereum = !!window.ethereum;
-        
-        if (hasEthereum) {
-          detectedSpan.textContent = "✅ Web3 wallet detected";
-          detectedSpan.style.color = "#0f766e";
-        } else {
-          detectedSpan.textContent = "⚠️ No wallet detected - use wallet browser";
-          detectedSpan.style.color = "#d97706";
-        }
-        statusDiv.style.display = "block";
       }
 
       // --- LOAD SNAPSHOTS ---
@@ -855,34 +832,6 @@
           }
         });
       });
-      
-      // Debug button handler
-      debugBtn.addEventListener("click", () => {
-        const debugInfo = {
-          hasEthereum: !!window.ethereum,
-          hasWeb3: !!window.web3,
-          ethereumProvider: window.ethereum?.isMetaMask ? 'MetaMask' : (window.ethereum ? 'Other' : 'None'),
-          userAgent: navigator.userAgent,
-          isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-          connected: !!userAddress,
-          address: userAddress || 'Not connected',
-          url: window.location.href
-        };
-        
-        console.log("🔍 WALLET DEBUG INFO:", debugInfo);
-        
-        let debugMsg = "🔍 Wallet Debug Info:\n\n";
-        debugMsg += `✓ Web3 detected: ${debugInfo.hasEthereum ? 'YES' : 'NO'}\n`;
-        debugMsg += `✓ Provider: ${debugInfo.ethereumProvider}\n`;
-        debugMsg += `✓ Mobile device: ${debugInfo.isMobile ? 'YES' : 'NO'}\n`;
-        debugMsg += `✓ Connected: ${debugInfo.connected ? 'YES' : 'NO'}\n\n`;
-        debugMsg += `User Agent:\n${debugInfo.userAgent.substring(0, 60)}...`;
-        
-        showMessage(debugMsg, "warning");
-        
-        // Also log to console for detailed inspection
-        alert("Debug info logged to console (F12)");
-      });
 
       // Set up MetaMask event listeners
       if (window.ethereum) {
@@ -900,12 +849,6 @@
 
       // Load snapshot data
       loadLists();
-      
-      // Show wallet detection status
-      updateWalletStatus();
-      
-      // Re-check wallet status periodically (MetaMask Mobile can inject late)
-      setInterval(updateWalletStatus, 2000);
 
       // Note: Not auto-connecting to avoid unwanted MetaMask popups on page load
       // Users will connect manually by clicking the "Connect Wallet" button
