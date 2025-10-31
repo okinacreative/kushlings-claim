@@ -1,338 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Kushlings Claim – Debug</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Kushlings Claim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      :root {
-        --green: #2ba84a;
-        --green2: #33c26b;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: radial-gradient(circle at top, #ffffff 0%, #d8d8d8 150%);
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-      #wrap {
-        width: min(720px, 96vw);
-      }
-      #debug {
-        background: #111;
-        color: #0ff;
-        padding: 10px 14px;
-        border-radius: 14px;
-        font-size: 13px;
-        line-height: 1.35;
-        margin-bottom: 14px;
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-      #card {
-        background: #fff;
-        border-radius: 28px;
-        width: 100%;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-        padding: 28px;
-      }
-      #header {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        margin-bottom: 26px;
-      }
-      #connectBtn,
-      #rawConnectBtn {
-        background: linear-gradient(90deg, var(--green) 0%, var(--green2) 100%);
-        color: #fff;
-        border: 3px solid #165cc9;
-        border-radius: 9999px;
-        height: 56px;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        padding: 0 24px;
-      }
-      #connectBtn {
-        flex: 1;
-        height: 64px;
-        font-size: 20px;
-      }
-      .label {
-        font-weight: 600;
-        margin-bottom: 6px;
-      }
-      .input {
-        width: 100%;
-        background: #f3f4f6;
-        border: none;
-        border-radius: 16px;
-        padding: 14px;
-        font-size: 16px;
-        outline: none;
-        margin-bottom: 18px;
-      }
-      #claimBtn {
-        width: 100%;
-        background: linear-gradient(90deg, #8a77df 0%, #7ad8ed 94%);
-        border: 3px solid rgba(71, 93, 191, 0.3);
-        border-radius: 9999px;
-        height: 62px;
-        color: #fff;
-        font-weight: 700;
-        font-size: 20px;
-        cursor: pointer;
-        margin-top: 6px;
-      }
-      #msg {
-        margin-top: 16px;
-        display: none;
-        font-size: 14px;
-      }
-      #msg.error {
-        color: #c0392b;
-      }
-      #msg.success {
-        color: #0f766e;
-      }
-    </style>
+  <style>
+    :root {
+      --card-w: min(640px, 94vw);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #ffffff 0%, #dcdfe3 120%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    #kush-card {
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: 0 24px 50px rgba(0,0,0,.08);
+      width: var(--card-w);
+      padding: 28px;
+    }
+    #kush-header {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    #kush-connect-btn {
+      flex: 1;
+      height: 68px;
+      border-radius: 9999px;
+      background: linear-gradient(95deg, #27ae60 0%, #45d07d 90%);
+      border: 3px solid rgba(19,80,182,.6);
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    #kush-wallet-btn {
+      width: 68px;
+      height: 68px;
+      border: none;
+      background: linear-gradient(140deg, #f495d1 0%, #8a77df 100%);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    #kush-wallet-btn svg {
+      width: 32px; height: 32px; stroke: #fff; stroke-width: 1.5; fill: none;
+    }
+    .kush-label {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .kush-input {
+      width: 100%;
+      background: #f3f4f6;
+      border: none;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 18px;
+    }
+    #kush-claim-btn {
+      width: 100%;
+      height: 66px;
+      border-radius: 9999px;
+      border: 3px solid rgba(71,93,191,0.25);
+      background: linear-gradient(95deg, #6a7ddd 0%, #70d6ec 96%);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #kush-claim-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    #kush-message {
+      margin-top: 14px;
+      display: none;
+      font-size: 14px;
+    }
+    #kush-message.error { color: #c0392b; }
+    #kush-message.success { color: #0f766e; }
 
-    <!-- ethers for later (won't block debug) -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"></script>
-  </head>
-  <body>
-    <div id="wrap">
-      <div id="debug">loading detection…</div>
+    @media (max-width: 540px) {
+      #kush-card { border-radius: 0; min-height: 100vh; justify-content: center; }
+      body { background: #e9e9e9; }
+    }
+  </style>
 
-      <div id="card">
-        <div id="header">
-          <button id="connectBtn">Connect Wallet</button>
-          <button id="rawConnectBtn" type="button">Raw connect</button>
-        </div>
-
-        <div class="label">Connected:</div>
-        <div id="address" style="margin-bottom: 14px">Not connected</div>
-
-        <div class="label">Claimable (from snapshot)</div>
-        <input id="claimable" class="input" value="0" readonly />
-
-        <div class="label">Quantity to claim now</div>
-        <input id="qty" class="input" value="1" />
-
-        <button id="claimBtn">Claim Kushlings</button>
-        <div id="msg"></div>
-      </div>
+  <!-- BROWSER BUILD (works in Vercel static page) -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+</head>
+<body>
+  <div id="kush-card">
+    <div id="kush-header">
+      <button id="kush-connect-btn">Connect Wallet</button>
+      <button id="kush-wallet-btn" aria-label="wallet">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 7h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/>
+          <path d="M18 12h2"/>
+          <path d="M8 7V5a2 2 0 0 1 2-2h6"/>
+        </svg>
+      </button>
     </div>
 
-    <script>
-      // ------- CONFIG (same as before) -------
-      const CLAIMS_URL =
-        "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_0136e423c6d940eeaae0d6b74fcb47ab.json";
-      const PROOFS_URL =
-        "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_1808839a4f844d90b9de50804129c0c3.json";
-      const CONTRACT_ADDRESS = "0xf8E567D269B9C9be82520A6c8Cf76f364aa2735d";
-      const CONTRACT_ABI = [
-        {
-          inputs: [
-            { internalType: "uint256", name: "qty", type: "uint256" },
-            { internalType: "uint256", name: "maxFor", type: "uint256" },
-            { internalType: "bytes32[]", name: "proof", type: "bytes32[]" }
-          ],
-          name: "claim",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function"
-        }
-      ];
+    <div class="kush-label">Connected:</div>
+    <div id="kush-address" style="margin-bottom:14px;">Not connected</div>
 
-      // ------- STATE -------
-      let claims = {};
-      let proofs = {};
-      let merkleRoot = null;
-      let signer = null;
-      let userAddress = null;
+    <div class="kush-label">Claimable (from snapshot)</div>
+    <input id="kush-claimable" class="kush-input" value="0" readonly />
 
-      // ------- DOM -------
-      const debugBox = document.getElementById("debug");
-      const connectBtn = document.getElementById("connectBtn");
-      const rawConnectBtn = document.getElementById("rawConnectBtn");
-      const addressDiv = document.getElementById("address");
-      const claimableInput = document.getElementById("claimable");
-      const qtyInput = document.getElementById("qty");
-      const claimBtn = document.getElementById("claimBtn");
-      const msg = document.getElementById("msg");
+    <div class="kush-label">Quantity to claim now</div>
+    <input id="kush-qty" class="kush-input" value="1" />
 
-      function showMessage(text, type = "error") {
-        msg.textContent = text;
-        msg.className = type;
-        msg.style.display = "block";
+    <button id="kush-claim-btn">Claim Kushlings</button>
+    <div id="kush-message"></div>
+  </div>
+
+  <script>
+    // ----------- CONFIG -----------
+    const CLAIMS_URL =
+      "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_0136e423c6d940eeaae0d6b74fcb47ab.json";
+    const PROOFS_URL =
+      "https://444669a7-f30d-433d-b040-6e30f8af2637.usrfiles.com/ugd/444669_1808839a4f844d90b9de50804129c0c3.json";
+
+    const CONTRACT_ADDRESS = "0xf8E567D269B9C9be82520A6c8Cf76f364aa2735d";
+    const CONTRACT_ABI = [
+      {
+        inputs: [
+          { internalType: "uint256", name: "qty", type: "uint256" },
+          { internalType: "uint256", name: "maxFor", type: "uint256" },
+          { internalType: "bytes32[]", name: "proof", type: "bytes32[]" }
+        ],
+        name: "claim",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function"
       }
+    ];
 
-      function setDebug(obj) {
-        debugBox.textContent = JSON.stringify(obj, null, 2);
+    // ----------- STATE -----------
+    let claims = {};
+    let proofs = {};
+    let merkleRoot = null;
+    let userAddress = null;
+    let provider = null;
+    let signer = null;
+
+    // ----------- DOM -----------
+    const connectBtn  = document.getElementById("kush-connect-btn");
+    const addrDiv     = document.getElementById("kush-address");
+    const claimableIn = document.getElementById("kush-claimable");
+    const qtyIn       = document.getElementById("kush-qty");
+    const claimBtn    = document.getElementById("kush-claim-btn");
+    const msg         = document.getElementById("kush-message");
+
+    function showMessage(text, kind = "error") {
+      msg.textContent = text;
+      msg.style.display = "block";
+      msg.className = kind === "success" ? "success" : "error";
+    }
+
+    function normalizeAddr(a) {
+      return (a || "").toLowerCase();
+    }
+
+    function getAllowedFor(addr) {
+      const entry = claims[addr];
+      if (!entry) return 0;
+      if (typeof entry === "number") return entry;
+      if (typeof entry === "string" && entry.trim() !== "") return Number(entry);
+      if (typeof entry === "object") {
+        if (typeof entry.max === "number") return entry.max;
+        if (typeof entry.claimable === "number") return entry.claimable;
+        if (typeof entry.amount === "number") return entry.amount;
+        const firstNum = Object.values(entry).find(v => typeof v === "number");
+        if (firstNum) return firstNum;
       }
+      return 0;
+    }
 
-      function normalizeAddr(a) {
-        return (a || "").toLowerCase();
+    async function loadLists() {
+      try {
+        const [cRes, pRes] = await Promise.all([
+          fetch(CLAIMS_URL),
+          fetch(PROOFS_URL)
+        ]);
+        claims = await cRes.json();
+        const pJson = await pRes.json().catch(() => ({}));
+        proofs = pJson.proofs || {};
+        merkleRoot = pJson.root || null;
+        console.log("claims loaded:", Object.keys(claims).length);
+      } catch (err) {
+        console.error(err);
+        showMessage("Could not load claim data.");
       }
+    }
 
-      function getAllowedFor(addr) {
-        const entry = claims[addr];
-        if (!entry) return 0;
-        if (typeof entry === "number") return entry;
-        if (typeof entry === "string" && entry.trim() !== "") return Number(entry);
-        if (typeof entry === "object") {
-          if (typeof entry.max === "number") return entry.max;
-          if (typeof entry.claimable === "number") return entry.claimable;
-          if (typeof entry.amount === "number") return entry.amount;
-          const n = Object.values(entry).find((v) => typeof v === "number");
-          if (n) return n;
-        }
-        return 0;
-      }
-
-      // ------- LOAD LISTS -------
-      async function loadLists() {
-        try {
-          const [cRes, pRes] = await Promise.all([fetch(CLAIMS_URL), fetch(PROOFS_URL)]);
-          claims = await cRes.json();
-          const pJson = await pRes.json().catch(() => ({}));
-          proofs = pJson.proofs || {};
-          merkleRoot = pJson.root || null;
-        } catch (e) {
-          console.error(e);
-          showMessage("Failed to load claim data.");
-        }
-      }
-
-      // ------- RAW CONNECT (NO ETHERS) -------
-      async function rawConnect() {
+    // ----------- WALLET -----------
+    async function connectWallet() {
+      try {
         if (!window.ethereum) {
-          setDebug({
-            hasEthereum: false,
-            note: "No window.ethereum in this browser on this page"
-          });
-          showMessage("No wallet detected in this browser.");
+          showMessage("No wallet found. Install MetaMask.");
           return;
         }
-        try {
-          const accounts = await window.ethereum.request({
-            method: "eth_requestAccounts"
-          });
-          setDebug({
-            hasEthereum: true,
-            method: "eth_requestAccounts",
-            accounts
-          });
-          addressDiv.textContent = accounts[0];
-          showMessage("Wallet connected (raw).", "success");
-        } catch (e) {
-          setDebug({
-            hasEthereum: true,
-            method: "eth_requestAccounts",
-            error: e.message || e
-          });
-          showMessage("Wallet connection failed.");
-        }
-      }
 
-      // ------- ETHERS CONNECT (what we actually want) -------
-      async function connectWallet() {
-        if (!window.ethereum) {
-          setDebug({
-            hasEthereum: false,
-            note: "No window.ethereum in this browser on this page"
-          });
-          showMessage("No wallet detected.");
-          return;
-        }
-        try {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          signer = await provider.getSigner();
-          const addr = await signer.getAddress();
-          userAddress = normalizeAddr(addr);
+        // ethers v5 way
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        const addr = await signer.getAddress();
+        userAddress = normalizeAddr(addr);
 
-          addressDiv.textContent = userAddress;
-          connectBtn.textContent = "Connected ✅";
+        addrDiv.textContent = userAddress;
+        connectBtn.textContent = "Connected ✅";
 
-          const allowed = getAllowedFor(userAddress);
-          claimableInput.value = String(allowed);
-          setDebug({
-            hasEthereum: true,
-            address: userAddress,
-            allowed,
-            network: await provider.getNetwork().then((n) => n.name).catch(() => "unknown")
-          });
-
-          if (allowed > 0) {
-            showMessage("Wallet is on the claim list.", "success");
-          } else {
-            showMessage("🚫 This wallet is not on the claim list.");
-          }
-        } catch (e) {
-          console.error(e);
-          setDebug({
-            hasEthereum: true,
-            where: "connectWallet",
-            error: e.message || e
-          });
-          showMessage("Wallet connection failed.");
-        }
-      }
-
-      // ------- CLAIM -------
-      async function doClaim() {
-        if (!signer || !userAddress) {
-          return connectWallet();
-        }
         const allowed = getAllowedFor(userAddress);
-        if (!allowed) {
-          return showMessage("🚫 This wallet is not on the claim list.");
+        claimableIn.value = String(allowed);
+        if (allowed > 0) {
+          showMessage("Wallet is on the claim list.", "success");
+        } else {
+          showMessage("🚫 This wallet is not on the claim list.");
         }
-        const qty = Number(qtyInput.value || 0);
-        if (qty < 1 || qty > allowed) {
-          return showMessage("Invalid quantity.");
-        }
-        const proof = (proofs[userAddress] || []).map((p) => p);
-        if (!proof.length) return showMessage("No Merkle proof for this wallet.");
-        if (!merkleRoot) return showMessage("No Merkle root loaded.");
+      } catch (err) {
+        console.error(err);
+        showMessage("Wallet connection failed.");
+      }
+    }
 
-        try {
-          const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-          claimBtn.disabled = true;
-          showMessage("Sending transaction...", "success");
-          const tx = await contract.claim(qty, allowed, proof);
-          await tx.wait();
-          showMessage("✅ Claimed!", "success");
-        } catch (e) {
-          console.error(e);
-          showMessage("Claim failed: " + (e?.reason || e?.message || "unknown"));
-        } finally {
-          claimBtn.disabled = false;
-        }
+    // ----------- CLAIM -----------
+    async function doClaim() {
+      if (!signer || !userAddress) {
+        return connectWallet();
       }
 
-      // ------- INIT -------
-      loadLists().then(() => {
-        // first debug dump
-        setDebug({
-          initial: true,
-          hasEthereum: !!window.ethereum,
-          userAgent: navigator.userAgent
-        });
-      });
+      const allowed = getAllowedFor(userAddress);
+      if (!allowed) {
+        return showMessage("🚫 This wallet is not on the claim list.");
+      }
 
-      connectBtn.addEventListener("click", connectWallet);
-      rawConnectBtn.addEventListener("click", rawConnect);
-      claimBtn.addEventListener("click", doClaim);
-    </script>
-  </body>
+      const qty = Number(qtyIn.value || 0);
+      if (qty < 1 || qty > allowed) {
+        return showMessage("Invalid quantity.");
+      }
+
+      const proof = (proofs[userAddress] || []).map(p => p);
+      if (!proof.length) {
+        return showMessage("No Merkle proof for this wallet. (Check proofs.json)");
+      }
+      if (!merkleRoot) {
+        return showMessage("No Merkle root loaded.");
+      }
+
+      try {
+        const contract = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          CONTRACT_ABI,
+          signer
+        );
+        claimBtn.disabled = true;
+        showMessage("Sending transaction...", "success");
+        const tx = await contract.claim(qty, allowed, proof);
+        await tx.wait();
+        showMessage("✅ Claimed successfully!", "success");
+      } catch (err) {
+        console.error(err);
+        showMessage("Claim failed: " + (err?.reason || err?.message || "unknown"));
+      } finally {
+        claimBtn.disabled = false;
+      }
+    }
+
+    connectBtn.addEventListener("click", connectWallet);
+    claimBtn.addEventListener("click", doClaim);
+
+    // start
+    loadLists();
+  </script>
+</body>
 </html>
